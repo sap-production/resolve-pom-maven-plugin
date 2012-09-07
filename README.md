@@ -43,7 +43,7 @@ Just add the following build configuration to your (parent) POM and the plugin w
     <plugins>
       <plugin>
         <groupId>com.sap.prd.mobile.ios.maven.plugins</groupId>
-        <artifactId>resolve-pom-props-maven-plugin</artifactId>
+        <artifactId>resolve-pom-maven-plugin</artifactId>
         <version>1.0</version>
         <executions>
           <execution>
