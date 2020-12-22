@@ -42,7 +42,7 @@ import org.codehaus.plexus.util.FileUtils;
  * substituted POM is used in the former processing. Especially it will be used when an upload to
  * the local or remote repository takes place.
  */
-@Mojo(name = "resolve-pom-props", defaultPhase = LifecyclePhase.INITIALIZE)
+@Mojo(name = "resolve-pom-props", defaultPhase = LifecyclePhase.PACKAGE)
 public class ResolvePomPropsMojo
       extends AbstractMojo
 {
@@ -80,6 +80,17 @@ public class ResolvePomPropsMojo
     try {
       File origPomFile = project.getFile();
       File intermediatePomFile = new File(project.getBuild().getDirectory() + File.separator + origPomFile.getName());
+
+      /* target resolvedPom file has replaced by previous lifeCycle execution,
+       * ignore to fix the bug: resolvedPom replaced to blank content in some situation like mvn clean compile package
+       * that lifeCycle execution runs more than one time.
+       * In the above situation, package contains compile, so compile runs two times.
+       */
+      if(origPomFile.getAbsolutePath().contains(resolvedPomName)) {
+        getLog().info("already handled, ignore");
+        return;
+      }
+
       File resolvedPomFile = new File(origPomFile.getParentFile(), resolvedPomName);
 
       Resource pomResource = new Resource();
